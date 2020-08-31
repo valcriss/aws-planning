@@ -62,8 +62,8 @@
 
             <div v-if="item.exception !== null" class="row planning-item-exception">
                 <div class="col text-center">&nbsp;</div>
-                <div v-if="item.exception.state === 1" class="col-7 text-center">Instance available from {{ item.exception.startDate }} to {{ item.exception.endDate }}</div>
-                <div v-else class="col-7 text-center">Instance not available from {{ item.exception.startDate }} to {{ item.exception.endDate }}</div>
+                <div v-if="item.exception.state === 1" class="col-7 text-center">Instance available from {{ item.exception.startDate }} {{ item.exception.startTime }} to {{ item.exception.endDate }} {{ item.exception.endTime }}</div>
+                <div v-else class="col-7 text-center">Instance not available from {{ item.exception.startDate }} {{ item.exception.startTime }} to {{ item.exception.endDate }} {{ item.exception.endTime }}</div>
                 <div class="col text-center">&nbsp;</div>
             </div>
         </div>
