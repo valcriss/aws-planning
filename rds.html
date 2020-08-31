@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AWS - Planning</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="/assets/css/app.css" rel="stylesheet"></head>
+</head>
+<body>
+<div id="app">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">AWS Planning</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item" v-for="item in menu" :key="item.key" :class="{ active: item.active }">
+                    <a class="nav-link" :href="item.link">{{ item.label }}</a>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+
+    <div class="container-fluid">
+        <h1>{{ title }}</h1>
+
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-info" @click="addInstance">{{ buttonText }}</button>
+            </div>
+        </div>
+        <hr/>
+        <div class="row planning-header">
+            <div class="col-2 text-center">Instance</div>
+            <div class="col text-center" :class="{current: weekday === 1 }">Lundi</div>
+            <div class="col text-center" :class="{current: weekday === 2 }">Mardi</div>
+            <div class="col text-center" :class="{current: weekday === 3 }">Mercredi</div>
+            <div class="col text-center" :class="{current: weekday === 4 }">Jeudi</div>
+            <div class="col text-center" :class="{current: weekday === 5 }">Vendredi</div>
+            <div class="col text-center" :class="{current: weekday === 6 }">Samedi</div>
+            <div class="col text-center" :class="{current: weekday === 0 }">Dimanche</div>
+            <div class="col text-center">Statut</div>
+        </div>
+        <div v-for="item in items" :key="item.instanceId">
+            <div class="row planning-item">
+                <div class="col-2 text-center planning-item-name" @click="openItem(item.instanceId)">{{ item.Name }}</div>
+                <div class="col text-center" :class="{current: weekday === 1 }">{{ item.days[1].start ===null && item.days[1].end === null ? "Stopped" : item.days[1].start }} {{ item.days[1].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 2 }">{{ item.days[2].start ===null && item.days[2].end === null ? "Stopped" : item.days[2].start }} {{ item.days[2].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 3 }">{{ item.days[3].start ===null && item.days[3].end === null ? "Stopped" : item.days[3].start }} {{ item.days[3].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 4 }">{{ item.days[4].start ===null && item.days[4].end === null ? "Stopped" : item.days[4].start }} {{ item.days[4].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 5 }">{{ item.days[5].start ===null && item.days[5].end === null ? "Stopped" : item.days[5].start }} {{ item.days[5].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 6 }">{{ item.days[6].start ===null && item.days[6].end === null ? "Stopped" : item.days[6].start }} {{ item.days[6].end }}</div>
+                <div class="col text-center" :class="{current: weekday === 0 }">{{ item.days[0].start ===null && item.days[0].end === null ? "Stopped" : item.days[0].start }} {{ item.days[0].end }}</div>
+                <div class="col text-center">
+                    <span class="badge badge-pill badge-success">{{ item.Status }}</span>
+                </div>
+            </div>
+
+            <div v-if="item.exception !== null" class="row planning-item-exception">
+                <div class="col text-center">&nbsp;</div>
+                <div v-if="item.exception.state === 1" class="col-7 text-center">Instance available from {{ item.exception.startDate }} to {{ item.exception.endDate }}</div>
+                <div v-else class="col-7 text-center">Instance not available from {{ item.exception.startDate }} to {{ item.exception.endDate }}</div>
+                <div class="col text-center">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="parametersModal" tabindex="-1" role="dialog" aria-labelledby="parametersModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="parametersModalTitle">Planning Parameters</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div v-if="openedItem === null">
+                        <img class="spinner" width="102" src="/assets/images/spinner.gif" alt=""/>
+                    </div>
+                    <div v-else>
+                        <form>
+                            <input type="hidden" id="instanceId" v-model="openedItem.instanceId">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Instance</label>
+                                <div class="col-sm-9" v-if="openedItem.Name !== null">
+                                    <input type="text" readonly class="form-control-plaintext" v-model="openedItem.Name">
+                                </div>
+                                <div class="col-sm-9" v-if="openedItem.Name === null">
+                                    <input type="text" readonly class="form-control-plaintext" v-if="existing === null" value="Chargement en cours...">
+                                    <select class="form-control" v-if="existing !== null" v-model="openedItem.instanceId">
+                                        <option v-for="existingItem in existing" :value="existingItem.instanceId">
+                                            {{ existingItem.Name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Lundi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[1][start]" v-model="openedItem.days[1].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[1][end]" v-model="openedItem.days[1].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Mardi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[2][start]" v-model="openedItem.days[2].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[2][end]" v-model="openedItem.days[2].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Mercredi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[3][start]" v-model="openedItem.days[3].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[3][end]" v-model="openedItem.days[3].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Jeudi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[4][start]" v-model="openedItem.days[4].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[4][end]" v-model="openedItem.days[4].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Vendredi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[5][start]" v-model="openedItem.days[5].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[5][end]" v-model="openedItem.days[5].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Samedi</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[6][start]" v-model="openedItem.days[6].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[6][end]" v-model="openedItem.days[6].end" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Dimanche</label>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[0][start]" v-model="openedItem.days[0].start" >
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="time" class="form-control" id="days[0][end]" v-model="openedItem.days[0].end" >
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Exception</label>
+                                <div class="col-sm-6">
+                                    <div class="form-check">
+                                        <input id="exceptionActive" class="form-check-input" type="checkbox" @change="exceptionChange()" :checked="openedItem.exception !== null ? 'checked' : null">
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="openedItem.exception !== null" class="form-group row">
+                                <label class="col-sm-3 col-form-label">Statut</label>
+                                <div class="col-sm-6">
+                                    <select id="state" class="form-control" v-model="openedItem.exception.state">
+                                        <option value="1">Instance allumée</option>
+                                        <option value="0">Instance éteinte</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if="openedItem.exception !== null" class="form-group row">
+                                <label class="col-sm-3 col-form-label">Début</label>
+                                <div class="col-sm-4">
+                                    <input type="date" class="form-control" v-model="openedItem.exception.startDate" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="time" class="form-control" v-model="openedItem.exception.startTime" />
+                                </div>
+                            </div>
+                            <div v-if="openedItem.exception !== null" class="form-group row">
+                                <label class="col-sm-3 col-form-label">Fin</label>
+                                <div class="col-sm-4">
+                                    <input type="date" class="form-control" v-model="openedItem.exception.endDate" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="time" class="form-control" v-model="openedItem.exception.endTime" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button v-if="openedItem !== null && openedItem.Name !== null" @click="deleteInstance" type="button" class="btn btn-danger mr-auto">Supprimer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" id="saveChangesButton" class="btn btn-primary" @click="saveChanges">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/rdsinstances.js"></script>
+</body>
+</html>
