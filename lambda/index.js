@@ -2,11 +2,11 @@
 // CONFIGURATION
 /*******************************************************************************/
 var configuration = {
-    AWS_S3Bucket:"app-deploy.ptech.fr",
-    AWS_S3ConfigurationFile :"configuration.json",
-    AWS_Region :"eu-west-1",
-    DryRun:true,
-    TimeZone : "Europe/Paris",
+    AWS_S3Bucket: "app-deploy.ptech.fr",
+    AWS_S3ConfigurationFile: "configuration.json",
+    AWS_Region: "eu-west-1",
+    DryRun: true,
+    TimeZone: "Europe/Paris",
 }
 
 /*******************************************************************************/
@@ -25,10 +25,11 @@ var s3 = new aws.S3();
 
 exports.handler = async (event) => {
 
-    var response = null;
+    let body;
+    let response = null;
 
     if (event.hasOwnProperty('body')) {
-        var body = JSON.parse(event.body);
+        body = JSON.parse(event.body);
     } else {
         body = event;
     }
@@ -106,7 +107,7 @@ function listExisting(scope) {
 }
 
 function checkInstances() {
-    var orders = [];
+    let orders = [];
 
     return checkEc2Instances(orders).then(function (orders) {
         return checkRdsInstances(orders);
@@ -124,8 +125,8 @@ function checkEc2Instances(orders) {
 
         listConfigurationEc2().then(function (ec2) {
             ec2 = JSON.parse(ec2.body).data;
-            for (var i = 0; i < ec2.length; i++) {
-                var currentDesiredState = desiredState(ec2[i]);
+            for (let i = 0; i < ec2.length; i++) {
+                let currentDesiredState = desiredState(ec2[i]);
 
                 if (currentDesiredState !== ec2[i].Status && currentDesiredState === "STOPPED" && ec2[i].Status === "RUNNING") {
                     orders.push({"scope": "ec2", "instanceId": ec2[i].instanceId, "order": "stop"});
@@ -142,21 +143,21 @@ function checkEc2Instances(orders) {
 }
 
 async function startEc2Instance(instanceId) {
-    if(dryRun) return true;
+    if (dryRun) return true;
     var params = {
         InstanceIds: [instanceId]
     };
-    await ec2.startInstances(params, function (err, data) {
+    await ec2.startInstances(params, function (err) {
         if (err) console.log(err, err.stack);
     });
 }
 
 async function stopEc2Instance(instanceId) {
-    if(dryRun) return true;
+    if (dryRun) return true;
     var params = {
         InstanceIds: [instanceId]
     };
-    await ec2.stopInstances(params, function (err, data) {
+    await ec2.stopInstances(params, function (err) {
         if (err) console.log(err, err.stack);
     });
 }
@@ -227,10 +228,8 @@ function listConfigurationEc2() {
 
 function updateConfigurationEc2(values, params) {
 
-    for(let i=0;i<params.days.length;i++)
-    {
-        if(params.days[i].start === "" || params.days[i].end === "")
-        {
+    for (let i = 0; i < params.days.length; i++) {
+        if (params.days[i].start === "" || params.days[i].end === "") {
             params.days[i].start = null;
             params.days[i].end = null;
         }
@@ -339,7 +338,7 @@ function checkRdsInstances(orders) {
 }
 
 async function startRdsInstance(instanceId) {
-    if(dryRun) return true;
+    if (dryRun) return true;
     var params = {
         DBInstanceIdentifier: instanceId
     };
@@ -349,7 +348,7 @@ async function startRdsInstance(instanceId) {
 }
 
 async function stopRdsInstance(instanceId) {
-    if(dryRun) return true;
+    if (dryRun) return true;
     var params = {
         DBInstanceIdentifier: instanceId
     };
@@ -437,10 +436,8 @@ function listConfigurationRds() {
 }
 
 function updateConfigurationRds(values, params) {
-    for(let i=0;i<params.days.length;i++)
-    {
-        if(params.days[i].start === "" || params.days[i].end === "")
-        {
+    for (let i = 0; i < params.days.length; i++) {
+        if (params.days[i].start === "" || params.days[i].end === "") {
             params.days[i].start = null;
             params.days[i].end = null;
         }
@@ -507,8 +504,7 @@ function putConfigurationRds(params) {
 function desiredState(item) {
     var desiredFromPlanning = desiredStateFromPlanning(item);
     var desiredFromException = desiredStateFromException(item);
-    if(desiredFromException !== desiredFromPlanning && desiredFromException !== "NONE")
-    {
+    if (desiredFromException !== desiredFromPlanning && desiredFromException !== "NONE") {
         return desiredFromException;
     }
     return desiredFromPlanning;
@@ -535,17 +531,15 @@ function desiredStateFromPlanning(item) {
 }
 
 function desiredStateFromException(item) {
-    if(item.exception !== null)
-    {
-        if(item.exception.startDate  === null || item.exception.endDate  === null || item.exception.startTime  === null || item.exception.endTime  === null)
-        {
+    if (item.exception !== null) {
+        if (item.exception.startDate === null || item.exception.endDate === null || item.exception.startTime === null || item.exception.endTime === null) {
             return "NONE";
         }
         var d = (new Date());
 
-        let startIndex = Number(item.exception.startDate.replace("-",""));
-        let endIndex = Number(item.exception.endDate.replace("-",""));
-        let currentIndex = Number(d.toISOString().split('T')[0].replace("-",""));
+        let startIndex = Number(item.exception.startDate.replace("-", ""));
+        let endIndex = Number(item.exception.endDate.replace("-", ""));
+        let currentIndex = Number(d.toISOString().split('T')[0].replace("-", ""));
 
         if (currentIndex < startIndex || currentIndex >= endIndex) return "NONE";
 
@@ -560,7 +554,7 @@ function desiredStateFromException(item) {
 
         if (currentTimeIndex < startTimeIndex || currentTimeIndex >= endTimeIndex) return "NONE";
 
-        return (item.exception.state === 1) ? "RUNNING": "STOPPED";
+        return (item.exception.state === 1) ? "RUNNING" : "STOPPED";
     }
     return "NONE";
 }

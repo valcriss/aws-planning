@@ -1,7 +1,5 @@
-var API_ENDPOINT = "https://mljaenbgr6.execute-api.eu-west-1.amazonaws.com/PROD";
-
 function loadEc2Configuration() {
-    var params = {
+    const params = {
         "action": "list-configuration",
         "scope": "ec2"
     };
@@ -9,7 +7,7 @@ function loadEc2Configuration() {
 }
 
 function loadRdsConfiguration() {
-    var params = {
+    const params = {
         "action": "list-configuration",
         "scope": "rds"
     };
@@ -17,7 +15,7 @@ function loadRdsConfiguration() {
 }
 
 function putEc2Item(item) {
-    var params = {
+    const params = {
         "action": "put-configuration",
         "scope": "ec2",
         "params": item
@@ -26,7 +24,7 @@ function putEc2Item(item) {
 }
 
 function putRdsItem(item) {
-    var params = {
+    const params = {
         "action": "put-configuration",
         "scope": "rds",
         "params": item
@@ -35,7 +33,7 @@ function putRdsItem(item) {
 }
 
 function deleteEc2Item(item){
-    var params = {
+    const params = {
         "action": "delete-configuration",
         "scope": "ec2",
         "params": item
@@ -44,7 +42,7 @@ function deleteEc2Item(item){
 }
 
 function deleteRdsItem(item){
-    var params = {
+    const params = {
         "action": "delete-configuration",
         "scope": "rds",
         "params": item
@@ -54,7 +52,7 @@ function deleteRdsItem(item){
 
 function loadExistingEc2()
 {
-    var params = {
+    const params = {
         "action": "list-existing",
         "scope": "ec2"
     };
@@ -63,7 +61,7 @@ function loadExistingEc2()
 
 function loadExistingRds()
 {
-    var params = {
+    const params = {
         "action": "list-existing",
         "scope": "rds"
     };
