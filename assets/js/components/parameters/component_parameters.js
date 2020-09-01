@@ -4,7 +4,31 @@ Vue.component('parameters', {
         return {
             openedItem: null,
             existing: null,
+            locales: {
+                title: "",
+                instance: "",
+                loading: "",
+                monday: "",
+                tuesday: "",
+                wednesday: "",
+                thursday: "",
+                friday: "",
+                saturday: "",
+                sunday: "",
+                status: "",
+                exception: "",
+                available: "",
+                not_available: "",
+                from: "",
+                to: "",
+                delete: "",
+                close: "",
+                save: ""
+            }
         }
+    },
+    mounted() {
+        loadLocale("/assets/js/components/parameters").then(response => (this.locales = response.data));
     },
     watch: {
         scope: function () {
@@ -71,7 +95,7 @@ Vue.component('parameters', {
         '        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">' +
         '            <div class="modal-content">' +
         '                <div class="modal-header">' +
-        '                    <h5 class="modal-title" id="parametersModalTitle">Planning Parameters</h5>' +
+        '                    <h5 class="modal-title" id="parametersModalTitle">{{ locales.title }}</h5>' +
         '                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
         '                        <span aria-hidden="true">&times;</span>' +
         '                    </button>' +
@@ -84,12 +108,12 @@ Vue.component('parameters', {
         '                        <form>' +
         '                            <input type="hidden" id="instanceId" v-model="openedItem.instanceId">' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Instance</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.instance }}</label>' +
         '                                <div class="col-sm-9" v-if="openedItem.Name !== null">' +
         '                                    <input type="text" readonly class="form-control-plaintext" v-model="openedItem.Name">' +
         '                                </div>' +
         '                                <div class="col-sm-9" v-if="openedItem.Name === null">' +
-        '                                    <input type="text" readonly class="form-control-plaintext" v-if="existing === null" value="Chargement en cours...">' +
+        '                                    <input type="text" readonly class="form-control-plaintext" v-if="existing === null" :value="locales.loading">' +
         '                                    <select class="form-control" v-if="existing !== null" v-model="openedItem.instanceId">' +
         '                                        <option v-for="existingItem in existing" :value="existingItem.instanceId">' +
         '                                            {{ existingItem.Name }}' +
@@ -99,7 +123,7 @@ Vue.component('parameters', {
         '                            </div>' +
         '                            <hr/>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Lundi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.monday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[1][start]" v-model="openedItem.days[1].start" >' +
         '                                </div>' +
@@ -108,7 +132,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Mardi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.tuesday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[2][start]" v-model="openedItem.days[2].start" >' +
         '                                </div>' +
@@ -117,7 +141,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Mercredi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.wednesday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[3][start]" v-model="openedItem.days[3].start" >' +
         '                                </div>' +
@@ -126,7 +150,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Jeudi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.thursday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[4][start]" v-model="openedItem.days[4].start" >' +
         '                                </div>' +
@@ -135,7 +159,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Vendredi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.friday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[5][start]" v-model="openedItem.days[5].start" >' +
         '                                </div>' +
@@ -144,7 +168,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Samedi</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.saturday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[6][start]" v-model="openedItem.days[6].start" >' +
         '                                </div>' +
@@ -153,7 +177,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Dimanche</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.sunday }}</label>' +
         '                                <div class="col-sm-3">' +
         '                                    <input type="time" class="form-control" id="days[0][start]" v-model="openedItem.days[0].start" >' +
         '                                </div>' +
@@ -163,7 +187,7 @@ Vue.component('parameters', {
         '                            </div>' +
         '                            <hr/>' +
         '                            <div class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Exception</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.exception }}</label>' +
         '                                <div class="col-sm-6">' +
         '                                    <div class="form-check">' +
         '                                        <input id="exceptionActive" class="form-check-input" type="checkbox" @change="exceptionChange()" :checked="openedItem.exception !== null ? \'checked\' : null">' +
@@ -171,16 +195,16 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div v-if="openedItem.exception !== null" class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Statut</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.status }}</label>' +
         '                                <div class="col-sm-6">' +
         '                                    <select id="state" class="form-control" v-model="openedItem.exception.state">' +
-        '                                        <option value="1">Instance allumée</option>' +
-        '                                        <option value="0">Instance éteinte</option>' +
+        '                                        <option value="1">{{ locales.available }}</option>' +
+        '                                        <option value="0">{{ locales.not_available }}</option>' +
         '                                    </select>' +
         '                                </div>' +
         '                            </div>' +
         '                            <div v-if="openedItem.exception !== null" class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Début</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.from }}</label>' +
         '                                <div class="col-sm-4">' +
         '                                    <input type="date" class="form-control" v-model="openedItem.exception.startDate" />' +
         '                                </div>' +
@@ -189,7 +213,7 @@ Vue.component('parameters', {
         '                                </div>' +
         '                            </div>' +
         '                            <div v-if="openedItem.exception !== null" class="form-group row">' +
-        '                                <label class="col-sm-3 col-form-label">Fin</label>' +
+        '                                <label class="col-sm-3 col-form-label">{{ locales.to }}</label>' +
         '                                <div class="col-sm-4">' +
         '                                    <input type="date" class="form-control" v-model="openedItem.exception.endDate" />' +
         '                                </div>' +
@@ -201,9 +225,9 @@ Vue.component('parameters', {
         '                    </div>' +
         '                </div>' +
         '                <div class="modal-footer">' +
-        '                    <button v-if="openedItem !== null && openedItem.Name !== null" @click="deleteItem" type="button" class="btn btn-danger mr-auto">Supprimer</button>' +
-        '                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>' +
-        '                    <button type="button" id="saveItemButton" class="btn btn-primary" @click="saveItem">Sauvegarder</button>' +
+        '                    <button v-if="openedItem !== null && openedItem.Name !== null" @click="deleteItem" type="button" class="btn btn-danger mr-auto">{{ locales.delete }}</button>' +
+        '                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ locales.close }}</button>' +
+        '                    <button type="button" id="saveItemButton" class="btn btn-primary" @click="saveItem">{{ locales.save }}</button>' +
         '                </div>' +
         '            </div>' +
         '        </div>' +

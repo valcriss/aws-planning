@@ -1,0 +1,16 @@
+{
+  "instance": "Libelle",
+  "monday": "Lundi",
+  "tuesday": "Mardi",
+  "wednesday": "Mercredi",
+  "thursday": "Jeudi",
+  "friday": "Vendredi",
+  "saturday": "Samedi",
+  "sunday": "Dimanche",
+  "status": "Statut",
+  "no_items": "Aucune instance configurée pour le moment",
+  "available": "Instance disponible",
+  "not_available": "Instance non disponible",
+  "from": "du",
+  "to": "au"
+}

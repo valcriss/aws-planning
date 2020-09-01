@@ -4,7 +4,26 @@ Vue.component('planning', {
         return {
             weekday: dateGetWeekDay(),
             items: [],
+            locales: {
+                instance: "",
+                monday: "",
+                tuesday: "",
+                wednesday: "",
+                thursday: "",
+                friday: "",
+                saturday: "",
+                sunday: "",
+                status: "",
+                no_items: "",
+                available: "",
+                not_available: "",
+                from: "",
+                to: ""
+            }
         }
+    },
+    mounted() {
+        loadLocale("/assets/js/components/planning").then(response => (this.locales = response.data));
     },
     watch: {
         scope: function () {
@@ -28,19 +47,19 @@ Vue.component('planning', {
         }
     },
     template: '<div><div class="row planning-header">' +
-        '            <div class="col-2 text-center">Instance</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 1 }">Lundi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 2 }">Mardi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 3 }">Mercredi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 4 }">Jeudi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 5 }">Vendredi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 6 }">Samedi</div>' +
-        '            <div class="col text-center" :class="{current: weekday === 0 }">Dimanche</div>' +
-        '            <div class="col text-center">Statut</div>' +
+        '            <div class="col-2 text-center">{{ locales.instance }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 1 }">{{ locales.monday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 2 }">{{ locales.tuesday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 3 }">{{ locales.wednesday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 4 }">{{ locales.thursday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 5 }">{{ locales.friday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 6 }">{{ locales.saturday }}</div>' +
+        '            <div class="col text-center" :class="{current: weekday === 0 }">{{ locales.sunday }}</div>' +
+        '            <div class="col text-center">{{ locales.status }}</div>' +
         '        </div>' +
         '        <div v-if="items.length===0">' +
         '            <div class="row planning-item">' +
-        '                <div class="col text-center">Aucune instance configurée</div>' +
+        '                <div class="col text-center">{{ locales.no_items }}</div>' +
         '            </div>' +
         '        </div>' +
         '        <div v-if="items.length>0" v-for="item in items" :key="item.instanceId">' +
@@ -59,8 +78,8 @@ Vue.component('planning', {
         '            </div>' +
         '            <div v-if="item.exception !== null" class="row planning-item-exception">' +
         '                <div class="col text-center">&nbsp;</div>' +
-        '                <div v-if="item.exception.state === 1" class="col-7 text-center">Instance available from {{ item.exception.startDate }} {{ item.exception.startTime }} to {{ item.exception.endDate }} {{ item.exception.endTime }}</div>' +
-        '                <div v-else class="col-7 text-center">Instance not available from {{ item.exception.startDate }} {{ item.exception.startTime }} to {{ item.exception.endDate }} {{ item.exception.endTime }}</div>' +
+        '                <div v-if="item.exception.state === 1" class="col-7 text-center">{{ locales.available }} {{ locales.from }} {{ item.exception.startDate }} {{ item.exception.startTime }} {{ locales.to }} {{ item.exception.endDate }} {{ item.exception.endTime }}</div>' +
+        '                <div v-else class="col-7 text-center">{{ locales.not_available }} {{ locales.from }} {{ item.exception.startDate }} {{ item.exception.startTime }} {{ locales.to }} {{ item.exception.endDate }} {{ item.exception.endTime }}</div>' +
         '                <div class="col text-center">&nbsp;</div>' +
         '            </div>' +
         '        </div></div>'

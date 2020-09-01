@@ -2,7 +2,14 @@ $(document).ready(function () {
     new Vue({
         el: '#app',
         data: {
-            scope: 'ec2'
+            scope: 'ec2',
+            locales: {
+                planning: "",
+                button: ""
+            }
+        },
+        mounted() {
+            loadLocale("/assets/js").then(response => (this.locales = response.data));
         },
         methods: {
             // Events

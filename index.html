@@ -12,11 +12,11 @@
     <nav-bar v-bind:scope="this.scope" v-on:scope-changed="onChangeScope"></nav-bar>
 
     <div class="container-fluid">
-        <h1>{{ scope.toUpperCase() }} Instances planning</h1>
+        <h1>{{ locales.planning.replace("--key--",scope.toUpperCase()) }}</h1>
 
         <div class="row">
             <div class="col">
-                <button class="btn btn-info" @click="addItem">Add {{ scope.toUpperCase() }} Instance</button>
+                <button class="btn btn-info" @click="addItem">{{ locales.button.replace("--key--",scope.toUpperCase()) }}</button>
             </div>
         </div>
         <hr/>
@@ -34,15 +34,15 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+<script src="/assets/js/components/tools/common.js"></script>
+
 <script src="/assets/js/configuration.js"></script>
 <script src="/assets/js/api/api.js"></script>
 <script src="/assets/js/api/apiClient.js"></script>
 
-<script src="/assets/js/components/component_navbar.js"></script>
-<script src="/assets/js/components/component_planning.js"></script>
-<script src="/assets/js/components/component_parameters.js"></script>
-
-<script src="/assets/js/common.js"></script>
+<script src="/assets/js/components/navbar/component_navbar.js"></script>
+<script src="/assets/js/components/planning/component_planning.js"></script>
+<script src="/assets/js/components/parameters/component_parameters.js"></script>
 
 <script src="/assets/js/app.js"></script>
 </body>

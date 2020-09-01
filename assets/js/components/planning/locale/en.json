@@ -1,0 +1,16 @@
+{
+  "instance": "Label",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "status": "Status",
+  "no_items": "No configured instance found",
+  "available": "Instance available",
+  "not_available": "Instance not available",
+  "from": "from",
+  "to": "to"
+}

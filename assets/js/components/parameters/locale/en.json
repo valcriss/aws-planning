@@ -1,0 +1,21 @@
+{
+  "title": "Instance Parameters",
+  "instance": "Instance",
+  "loading": "Loading, please wait...",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "status": "State",
+  "exception": "Exception",
+  "available": "Instance available",
+  "not_available": "Instance not available",
+  "from": "From",
+  "to": "To",
+  "delete": "Delete",
+  "close": "Close",
+  "save": "Save"
+}

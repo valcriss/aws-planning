@@ -2,20 +2,24 @@ Vue.component('nav-bar', {
     props: ['scope'],
     data: function () {
         return {
-            current:this.scope,
+            current: this.scope,
             items: [
                 {
                     "key": "ec2",
                     "label": "EC2 Instances",
-                    "title": "EC2 Instances planning"
                 },
                 {
                     "key": "rds",
                     "label": "RDS Instances",
-                    "title": "RDS Instances planning"
                 }
-            ]
+            ],
+            locales: {
+                instances: "",
+            }
         }
+    },
+    mounted() {
+        loadLocale("/assets/js/components/navbar").then(response => (this.locales = response.data));
     },
     watch: {
         scope: function () {
@@ -23,8 +27,8 @@ Vue.component('nav-bar', {
         }
     },
     methods: {
-        changeScope:function (scope) {
-            if(scope !== this.current) {
+        changeScope: function (scope) {
+            if (scope !== this.current) {
                 this.current = scope;
                 this.$emit('scope-changed', scope);
             }
@@ -38,7 +42,7 @@ Vue.component('nav-bar', {
         '            <a class="navbar-brand" href="#">AWS Planning</a>' +
         '            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">' +
         '                <li class="nav-item" v-for="item in items" :key="item.key" :class="{ active: item.key === current }">' +
-        '                    <a class="nav-link" href="#" @click="changeScope(item.key)">{{ item.label }}</a>' +
+        '                    <a class="nav-link" href="#" @click="changeScope(item.key)">{{ locales.instances.replace("--key--",item.key.toUpperCase()) }}</a>' +
         '                </li>' +
         '            </ul>' +
         '        </div>' +
