@@ -1,5 +1,3 @@
-const STOPPED = "STOPPED";
-
 $(document).ready(function () {
     new Vue({
         el: '#app',
