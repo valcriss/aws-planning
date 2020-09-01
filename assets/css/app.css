@@ -89,6 +89,21 @@ h1
     padding: 0.4em 0.9em;
 }
 
+.planning-item > .col > .badge.running {
+    color: #fff;
+    background-color: #28a745;
+}
+
+.planning-item > .col > .badge.pending {
+    color: #fff;
+    background-color: #e2b302;
+}
+
+.planning-item > .col > .badge.stopped {
+    color: #fff;
+    background-color: #767676;
+}
+
 .planning-item .planning-item-name
 {
     cursor: pointer;

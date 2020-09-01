@@ -8,6 +8,7 @@
   "saturday": "Saturday",
   "sunday": "Sunday",
   "status": "Status",
+  "stopped": "Stopped",
   "no_items": "No configured instance found",
   "available": "Instance available",
   "not_available": "Instance not available",

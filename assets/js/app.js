@@ -1,3 +1,5 @@
+const STOPPED = "STOPPED";
+
 $(document).ready(function () {
     new Vue({
         el: '#app',
@@ -10,6 +12,7 @@ $(document).ready(function () {
         },
         mounted() {
             loadLocale("/assets/js").then(response => (this.locales = response.data));
+            this.$refs.planning.refresh();
         },
         methods: {
             // Events

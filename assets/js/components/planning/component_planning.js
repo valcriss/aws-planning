@@ -14,6 +14,7 @@ Vue.component('planning', {
                 saturday: "",
                 sunday: "",
                 status: "",
+                stopped:"",
                 no_items: "",
                 available: "",
                 not_available: "",
@@ -35,6 +36,13 @@ Vue.component('planning', {
     methods: {
         refresh: function () {
             new apiClient(this.scope).loadItems(response => (this.items = response.data.data));
+        },
+        isItemRunning(item)
+        {
+            if(item.Status === "STOPPED") return 0;
+            if(item.Status === "AVAILABLE") return 1;
+            if(item.Status === "RUNNING") return 1;
+            return -1;
         },
         openItem: function (instanceId) {
             for (let i = 0; i < this.items.length; i++) {
@@ -65,15 +73,15 @@ Vue.component('planning', {
         '        <div v-if="items.length>0" v-for="item in items" :key="item.instanceId">' +
         '            <div class="row planning-item">' +
         '                <div class="col-2 text-center planning-item-name" @click="openItem(item.instanceId)">{{ item.Name }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 1 }">{{ item.days[1].start ===null && item.days[1].end === null ? "Stopped" : item.days[1].start }} {{ item.days[1].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 2 }">{{ item.days[2].start ===null && item.days[2].end === null ? "Stopped" : item.days[2].start }} {{ item.days[2].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 3 }">{{ item.days[3].start ===null && item.days[3].end === null ? "Stopped" : item.days[3].start }} {{ item.days[3].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 4 }">{{ item.days[4].start ===null && item.days[4].end === null ? "Stopped" : item.days[4].start }} {{ item.days[4].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 5 }">{{ item.days[5].start ===null && item.days[5].end === null ? "Stopped" : item.days[5].start }} {{ item.days[5].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 6 }">{{ item.days[6].start ===null && item.days[6].end === null ? "Stopped" : item.days[6].start }} {{ item.days[6].end }}</div>' +
-        '                <div class="col text-center" :class="{current: weekday === 0 }">{{ item.days[0].start ===null && item.days[0].end === null ? "Stopped" : item.days[0].start }} {{ item.days[0].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 1 }">{{ item.days[1].start ===null && item.days[1].end === null ? locales.stopped : item.days[1].start }} {{ item.days[1].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 2 }">{{ item.days[2].start ===null && item.days[2].end === null ? locales.stopped : item.days[2].start }} {{ item.days[2].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 3 }">{{ item.days[3].start ===null && item.days[3].end === null ? locales.stopped : item.days[3].start }} {{ item.days[3].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 4 }">{{ item.days[4].start ===null && item.days[4].end === null ? locales.stopped : item.days[4].start }} {{ item.days[4].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 5 }">{{ item.days[5].start ===null && item.days[5].end === null ? locales.stopped : item.days[5].start }} {{ item.days[5].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 6 }">{{ item.days[6].start ===null && item.days[6].end === null ? locales.stopped : item.days[6].start }} {{ item.days[6].end }}</div>' +
+        '                <div class="col text-center" :class="{current: weekday === 0 }">{{ item.days[0].start ===null && item.days[0].end === null ? locales.stopped : item.days[0].start }} {{ item.days[0].end }}</div>' +
         '                <div class="col text-center">' +
-        '                    <span class="badge badge-pill badge-success">{{ item.Status }}</span>' +
+        '                    <span class="badge badge-pill" :class="{ running: isItemRunning(item)===1,stopped: isItemRunning(item)===0,pending: isItemRunning(item)===-1 }">{{ item.Status }}</span>' +
         '                </div>' +
         '            </div>' +
         '            <div v-if="item.exception !== null" class="row planning-item-exception">' +
