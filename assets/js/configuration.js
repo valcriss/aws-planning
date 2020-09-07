@@ -2,4 +2,4 @@
 // CONFIGURATION
 /*******************************************************************************/
 
-const API_ENDPOINT = "https://mljaenbgr6.execute-api.eu-west-1.amazonaws.com/PROD";
+const API_ENDPOINT = "<< INSERT YOUR API ENDPOINT URL >>";

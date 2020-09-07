@@ -2,9 +2,9 @@
 // CONFIGURATION
 /*******************************************************************************/
 var configuration = {
-    AWS_S3Bucket: "app-deploy.ptech.fr",
+    AWS_S3Bucket: "<< INSERT YOUR BUCKET NAME HERE >>",
     AWS_S3ConfigurationFile: "configuration.json",
-    AWS_Region: "eu-west-1",
+    AWS_Region: "<< INSERT YOUR AWS REGION HERE >>",
     DryRun: true,
     TimeZone: "Europe/Paris",
 }
